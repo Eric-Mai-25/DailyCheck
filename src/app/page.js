@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { addTask, toggleTaskCompletion } from './Store/tasksSlice';
+import { addTask, toggleTaskCompletion, resetTasks } from './Store/tasksSlice';
 
 export default function Home() {
   const [newTask, setNewTask] = useState('');
@@ -15,9 +15,14 @@ export default function Home() {
     }
   };
 
+  const handleResetTask = () =>{
+    dispatch(resetTasks());
+  }
+
   return (
 <div style={{ padding: '2rem' }}>
       <h1>Daily Checklist</h1>
+      <div><button onClick={handleResetTask}> Reset</button></div>
       <div>
         <input
           type="text"
