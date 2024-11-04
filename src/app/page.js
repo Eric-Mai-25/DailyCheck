@@ -1,28 +1,22 @@
 "use client"
 import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { addTask, toggleTaskCompletion } from './Store/tasksSlice';
 
 export default function Home() {
+  const [newTask, setNewTask] = useState('');
+  const tasks = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
 
-  const [task, setTask] = useState([]);
-  const [newTask, setNewTask] = useState('')
-
-  const addTask = () =>{
-    if(newTask.trim()){
-      setTask([...task, {text: newTask, completed: false}]);
+  const handleAddTask = () => {
+    if (newTask.trim()) {
+      dispatch(addTask(newTask));
       setNewTask('');
     }
-  }
-
-  const toggleTaskCompletion = (index) =>{
-    setTask(
-      task.map((task,i)=>{
-        i === index ? {...task, completed: !task.completed} : task
-      })
-    )
-  }
+  };
 
   return (
-    <div style={{ padding: '2rem' }}>
+<div style={{ padding: '2rem' }}>
       <h1>Daily Checklist</h1>
       <div>
         <input
@@ -31,15 +25,15 @@ export default function Home() {
           onChange={(e) => setNewTask(e.target.value)}
           placeholder="Add a new task"
         />
-        <button onClick={addTask}>Add Task</button>
+        <button onClick={handleAddTask}>Add Task</button>
       </div>
       <ul>
-        {task.map((task, index) => (
+        {tasks.map((task, index) => (
           <li key={index} style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
             <input
               type="checkbox"
               checked={task.completed}
-              onChange={() => toggleTaskCompletion(index)}
+              onChange={() => dispatch(toggleTaskCompletion(index))}
             />
             {task.text}
           </li>
