@@ -1,21 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const isClient = typeof window !== "undefined";
-
 const loadTasks = () => {
-  if (isClient) {
-    const storedTasks = localStorage.getItem("tasks");
-    const lastResetDate = localStorage.getItem("lastResetDate");
-    const today = new Date().toLocaleDateString();
+  const storedTasks = localStorage.getItem("tasks");
+  const lastResetDate = localStorage.getItem("lastResetDate");
+  const today = new Date().toLocaleDateString();
 
-    if (lastResetDate !== today) {
-      localStorage.setItem("tasks", JSON.stringify([]));
-      localStorage.setItem("lastResetDate", today);
-      return [];
-    }
-
-    return storedTasks ? JSON.parse(storedTasks) : [];
+  if (lastResetDate !== today) {
+    localStorage.setItem("tasks", JSON.stringify([]));
+    localStorage.setItem("lastResetDate", today);
+    return [];
   }
+
+  return storedTasks ? JSON.parse(storedTasks) : [];
   return [];
 };
 
@@ -27,18 +23,14 @@ const tasksSlice = createSlice({
       const newTask = { text: action.payload, completed: false };
       state.push(newTask);
 
-      if (isClient) {
-        localStorage.setItem("tasks", JSON.stringify(state));
-      }
+      localStorage.setItem("tasks", JSON.stringify(state));
     },
     toggleTaskCompletion: (state, action) => {
       const task = state[action.payload];
       if (task) {
         task.completed = !task.completed;
 
-        if (isClient) {
-          localStorage.setItem("tasks", JSON.stringify(state));
-        }
+        localStorage.setItem("tasks", JSON.stringify(state));
       }
     },
     resetTasks: (state) => {
@@ -47,9 +39,14 @@ const tasksSlice = createSlice({
       });
       localStorage.setItem("tasks", JSON.stringify(state));
     },
-    removeTask: (state, action) =>
+    removeTask: (state, action) => {
+      const newState = state.filter((_, index) => index !== action.payload);
+      localStorage.setItem("tasks", JSON.stringify(newState));
+      return newState;
+    },
   },
 });
 
-export const { addTask, toggleTaskCompletion, resetTasks } = tasksSlice.actions;
+export const { addTask, toggleTaskCompletion, resetTasks, removeTask } =
+  tasksSlice.actions;
 export default tasksSlice.reducer;
