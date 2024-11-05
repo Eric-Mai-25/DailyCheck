@@ -32,17 +32,39 @@ export default function Home() {
         />
         <button onClick={handleAddTask}>Add Task</button>
       </div>
+      <h3>Incomplete</h3>
       <ul>
-        {tasks.map((task, index) => (
-          <li key={index} style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => dispatch(toggleTaskCompletion(index))}
-            />
-            {task.text}
-          </li>
-        ))}
+        {tasks.map((task, index) => {
+          if(task.completed === false){
+            return (
+              <li key={index}>
+                <input
+                  type="button"
+                  onClick={() => dispatch(toggleTaskCompletion(index))}
+                />
+                {task.text}
+              </li>
+            )
+          }
+        }
+        )}
+      </ul>
+      <h3>Completed</h3>
+      <ul>
+      {tasks.map((task, index) => {
+          if(task.completed === true){
+            return (
+              <li key={index}>
+                <input
+                  type="button"
+                  onClick={() => dispatch(toggleTaskCompletion(index))}
+                />
+                {task.text}
+              </li>
+            )
+          }
+        }
+        )}
       </ul>
     </div>
   );

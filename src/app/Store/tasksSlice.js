@@ -1,10 +1,7 @@
-// redux/tasksSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
-// Utility function to check if code is running in the client
 const isClient = typeof window !== "undefined";
 
-// Load tasks from localStorage or initialize with an empty array
 const loadTasks = () => {
   if (isClient) {
     const storedTasks = localStorage.getItem("tasks");
@@ -19,7 +16,6 @@ const loadTasks = () => {
 
     return storedTasks ? JSON.parse(storedTasks) : [];
   }
-  // Return an empty array if not in the client
   return [];
 };
 
@@ -51,6 +47,7 @@ const tasksSlice = createSlice({
       });
       localStorage.setItem("tasks", JSON.stringify(state));
     },
+    removeTask: (state, action) =>
   },
 });
 
