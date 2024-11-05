@@ -7,11 +7,16 @@ import {
   resetTasks,
   removeTask,
 } from "./Store/tasksSlice";
+import Modal from "./components/Modal";
 
 export default function Home() {
   const [newTask, setNewTask] = useState("");
   const tasks = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
+  const [isModelOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const handleAddTask = () => {
     if (newTask.trim()) {
@@ -31,6 +36,24 @@ export default function Home() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Daily Checklist</h1>
+      <div>
+        <button
+          onClick={openModal}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+        >
+          Open Modal
+        </button>
+
+        <Modal
+          isOpen={isModelOpen}
+          onClosed={closeModal}
+          title="My Reusable Modal"
+        >
+          <p>
+            This is the content inside the modal. You can put anything here.
+          </p>
+        </Modal>
+      </div>
       <div>
         <button onClick={handleResetTask}> Reset</button>
       </div>
@@ -70,9 +93,7 @@ export default function Home() {
           if (task.completed === true) {
             return (
               <li key={index}>
-                <button
-                  onClick={() => dispatch(toggleTaskCompletion(index))}
-                >
+                <button onClick={() => dispatch(toggleTaskCompletion(index))}>
                   Uncheck
                 </button>
                 {task.text}
